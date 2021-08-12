@@ -6,7 +6,8 @@ import { Form, Input, InputNumber, Checkbox } from 'formik-antd'
 
 export default function AuthenticatedApp() {
   return (
-    <div>
+    "Hello World"
+    /* <div>
       <div>
           <Router>
             <div>
@@ -47,8 +48,8 @@ export default function AuthenticatedApp() {
             </div>
           </div>
       </div>
-    </div>
-  )
+   </div> */
+ );
 }
 
 function Ship(){

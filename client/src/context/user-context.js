@@ -1,10 +1,10 @@
 import React from 'react'
-import {useAuth} from '../components/AuthContext/authContext.js'
+import {useAuthState} from '../components/AuthContext/authContext.js'
 
 const UserContext = React.createContext()
 
 function UserProvider(props) {
-  const {user} = useAuth();
+  const {user} = useAuthState();
   return <UserContext.Provider value={user} {...props} />
 }
 

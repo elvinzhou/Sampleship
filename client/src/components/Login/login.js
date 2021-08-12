@@ -18,7 +18,7 @@ return (
     onSuccess={AuthProvider.googleLogIn}
     onFailure={responseFailed}
     cookiePolicy={'single_host_origin'}
-    hosted_domain={'vibecartons.com'}
+    //hosted_domain={'vibecartons.com'}
     isSignedIn={true}
 />
     </div>

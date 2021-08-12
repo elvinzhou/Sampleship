@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from "react"
 import useSWR from "swr"
 
-const AuthContext = createContext()
+const AuthContext = createContext();
 
 function AuthProvider (props) {
 
@@ -40,9 +40,19 @@ function AuthProvider (props) {
     )
 }
 
-const useAuth = () => {
-  const context = React.useContext(AuthContext)
-  return context
+function useAuthState() {
+  const state = React.useContext(AuthContext)
+  const isPending = state.status === 'pending'
+  const isError = state.status === 'error'
+  const isSuccess = state.status === 'success'
+  const isAuthenticated = state.user && isSuccess
+  return {
+    ...state,
+    isPending,
+    isError,
+    isSuccess,
+    isAuthenticated,
+  }
 }
 
-export {AuthProvider, useAuth}
+export {AuthProvider, useAuthState}

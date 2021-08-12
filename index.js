@@ -64,16 +64,16 @@ app.post("/api/v1/auth/google", async (req, res) => {
 
     // New implementation directly using SQL
     const { name, email, picture, hd } = ticket.getPayload();
-    if (hd === 'vibecartons.com') {
+    //if (hd === 'vibecartons.com') {
       var userupdate = db.prepare('INSERT INTO users(email,name,picture) VALUES (@email,@name,@picture) ON CONFLICT(email) DO UPDATE SET name=excluded.name, picture=excluded.picture').run(name,email,picture);
       var user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
       req.session.userID = user.id;
       res.status(201);
       res.json(user);
-    } else {
+  /*  } else {
       res.status(403)
     }
-})
+} */)
 
 app.use(async (req, res, next) => {
     var finduser = db.prepare('SELECT * FROM users WHERE id = ?');

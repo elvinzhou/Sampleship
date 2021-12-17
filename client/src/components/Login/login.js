@@ -13,7 +13,7 @@ return (
 
     </div>
     <GoogleLogin
-    clientId="522442542983-1hmp10aiudp9faupti3fafs6c9jahon0.apps.googleusercontent.com"//{ck.REACT_APP_GOOGLE_CLIENT_ID}
+    clientId=ck.REACT_APP_GOOGLE_CLIENT_ID
     buttonText="Log in with Google"
     onSuccess={AuthProvider.googleLogIn}
     onFailure={responseFailed}

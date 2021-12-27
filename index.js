@@ -34,8 +34,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.post('/api/valaddress', function (req,res) {
-  const validatedaddress = validateaddress(req.body);
-  res.send(validatedaddress);
+  shipping.validateAddresses(req.body).then(validatedaddress => {
+    res.send(validatedaddress);
+  })
 })
 
 app.post('/api/getrates', async function(req,res) {
@@ -97,20 +98,29 @@ app.post('/api/getrates', async function(req,res) {
     ]
   }
   shipping.getRates(shipmentdeets).then(data => {
-    var rates = data.rateResponse.rates;
-    var rateobj = JSON.parse(rates.reduce((acc,item,index) => {
-      acc[`rate$(index)`] = item;
-      return acc;
-    },{}));
-    console.log(data.rateResponse.errors[0])
-    console.log('rates ' + rateobj);
-    res.send(rateobj);
+    var rates = data.rateResponse.rates; /*Brings rates in */
+    console.log(data.rateResponse.errors[0]);
+    console.log('rates ' + rates);
+    /*Need to save shipmentID and set statuscode to 1;*/
+    res.send(rates);
   });
 })
 
-app.post('/api/getlabel', function(req,res) {
-  const label = createLabel(req.body);
-  res.send(label);
+app.post('/api/labelreq', function(req,res) {
+  console.log(req.body);
+  shipping.createlabel(req.body.rateId).then(data => {
+    var labelId = data.labelId;
+    var shipmentId = data.shipmentId;
+    var shipmentCost = data.shipmentCost;
+    var tnumber = data.trackingNumber;
+    var carrierCode = data.carrierCode;
+    var serviceCode = data.serviceCode;
+    var label = data.labelDownload.pdf;
+    var package = data.packages;
+    var labeldb = db.prepare('INSERT INTO labels (labelId, shipmentId, shipmentCost, tnumber, carrierCode, serviceCode, label, package) VALUES (?,?,?,?,?,?,?,?)').run(labelId, shipmentId, shipmentCost, tnumber, carrierCode, serviceCode, label, package);
+    res.send(data);
+  });
+
 })
 
 app.post('/api/samplereqpost', function (req,res) {
@@ -138,9 +148,7 @@ app.post('/api/samplereqpost', function (req,res) {
 
 app.post('/api/osreq', function (req,res) {
   var statuscode = req.body.statuscode;
-  console.log(statuscode);
   var reqdb = db.prepare('SELECT rowid,fname,lname,cemail,samples,address from samples WHERE status = ?').all(statuscode);
-  console.log(reqdb);
   res.json(JSON.stringify(reqdb));
 })
 
@@ -189,7 +197,6 @@ app.use(async (req, res, next) => {
 
 
 app.get("/api/v1/auth/me", async (req, res) => {
-    console.log(req.body);
     res.status(200);
     res.json(req.user);
 })

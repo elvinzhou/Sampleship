@@ -5,6 +5,7 @@ const ck = require('ckey');
 
 export default function Login(){
 console.log("Not Logged In");
+const gcid = ck.REACT_APP_GOOGLE_CLIENT_ID;
 return (
 <div className="container centered justify-content-center">
 <div className="col-xs-1 col-md-8">
@@ -13,7 +14,7 @@ return (
 
     </div>
     <GoogleLogin
-    clientId=ck.REACT_APP_GOOGLE_CLIENT_ID
+    clientId= {gcid}
     buttonText="Log in with Google"
     onSuccess={AuthProvider.googleLogIn}
     onFailure={responseFailed}

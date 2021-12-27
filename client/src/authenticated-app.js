@@ -55,18 +55,6 @@ function Home() {
 );
 }
 
-async function getshippingrates(submitvalues) {
-  await fetch("/api/getrates", {
-  method: "POST",
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(submitvalues),
-}).then(res => res.json()).then(data => {
-    console.log(data);
-    return data;
-})}
-
 function Ship() {
   const [state, setState] = useState([]);
   const [loading, setloading] = useState(true);
@@ -96,6 +84,25 @@ function Ship() {
     setloading(true);
     getData();
   }, []);
+
+  const getshippingrates = async(submitvalues) => {
+    await fetch("/api/getrates", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(submitvalues),
+  }).then(res => res.json()).then(data => {
+      console.log(data)
+      const finalrates = [];
+      for (let i=0;i<data.length;i++){
+        var indrate = data[i];
+        indrate.totalAmount = indrate.shippingAmount.amount + indrate.insuranceAmount.amount + indrate.confirmationAmount.amount + indrate.otherAmount.amount;
+        finalrates.push(indrate);
+      };
+      setRates(finalrates);
+      setRatesLoading(false);
+  })};
 
   const getData = async() => {
       await fetch("/api/osreq", {
@@ -203,45 +210,53 @@ function Ship() {
   const ratecolumn = [
     {
       title:'RateID',
-      dataIndex:'rid',
-      key:'rid',
+      dataIndex:'rateId',
+      key:'rateId',
     },
     {
       title: 'Carrier',
-      dataIndex: 'carriercode',
-      key:'ccode',
+      dataIndex: 'carrierCode',
+      key:'carrierCode',
     },
     {
       title: 'Service',
-      dataIndex:'service',
-      key: 'service',
+      dataIndex:'serviceType',
+      key: 'serviceType',
     },
     {
       title:'Rate',
-      dataIndex:'rate',
-      key: 'rate',
+      dataIndex:'totalAmount',
+      key: 'totalAmount',
     },
     {
     title: 'Select',
     key: 'select',
     render: (text, record) => (
       <Space size="middle">
-        <a href="javascript:" onClick = {getLabel.bind(this, record.rid)}>Select</a>
+        <a href="javascript:" onClick = {getLabel.bind(this, record.rateId)}>Select</a>
       </Space>
     ),
   },
   ];
-  const getLabel = async (rid) => {
+  const getLabel = (rid) => {
       setIsModalVisible(false);
-      await fetch("/api/labelreq", {
+      console.log(rid);
+    fetch("/api/labelreq", {
         method:"POST",
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(rid)
+        body: JSON.stringify({rateId: rid})
       }).then(res => {
         if(res.status === 200) {
-          console.log(res.body)
+          res.json().then(body =>{
+            console.log(body);
+            const downloadlink = body.labelDownload.pdf;
+            Modal.success({
+              content: <a href = {downloadlink}>{downloadlink}</a>,
+              title: 'Download label using this link'
+            })
+          })
         } else throw new Error(res.status)
       })
   }
@@ -269,10 +284,7 @@ function Ship() {
       <Formik
         onSubmit={async (values) => {
           const submitvalues = {row,...values};
-          const temprates = getshippingrates(submitvalues);
-          console.log(temprates);
-          setRates(temprates);
-          setRatesLoading(false);
+          const rateloadfunc = await getshippingrates(submitvalues);
         }}
         initialValues={{
           manual: false
@@ -354,15 +366,16 @@ async function writetoDB(values) {
 
 function SampleReq() {
   const handleSubmit = async (values, { setSubmitting }) => {
+    const address = values.address;
+    address.countryCode = "US";
+    console.log(address);
     await fetch("/api/valaddress", {
       method:"POST",
       headers: {
         'Content-Type':'application/json',
       },
-      body:JSON.stringify(values.address)
-    }).then(res => {
-      if(res.status === 200) {
-        var result = res.body;
+      body:JSON.stringify(address)
+    }).then(res => res.json()).then(result => {
         if (result[0].status === 'verified') {
           var validatedaddress = result[0].normalizedAddress;
           values.address.line1 = validatedaddress.addressLine1;
@@ -374,7 +387,6 @@ function SampleReq() {
         } else {
           alert("This address is not valid:", result);
         }
-      } else throw new Error(res.status)
     });
     setTimeout(() => {
       setSubmitting(false);

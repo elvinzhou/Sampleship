@@ -45,12 +45,14 @@ async function createlabel(chosenrate) {
 
   console.log("The label that was created:");
   console.log(result);
+  return result;
 } catch (e) {
   console.log("Error creating label: ", e.message);
 }
 }
 
 async function validateAddresses(address) {
+  console.log(address);
   const params = [{
     name: address.name,
     companyName: address.company,
@@ -59,7 +61,7 @@ async function validateAddresses(address) {
     cityLocality: address.city,
     stateProvince: address.state,
     postalCode: address.zip,
-    countryCode: address.country,
+    countryCode: address.countryCode,
   }];
 
   try {
@@ -74,6 +76,7 @@ async function validateAddresses(address) {
      // Bad address. Print the warning & error messages
      console.log("The address is not valid");
      console.log(result);
+     console.log(result[0].messages);
    }
   } catch (e) {
     console.log("Error validating address: ", e.message);

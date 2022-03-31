@@ -8,6 +8,7 @@ import 'antd/dist/antd.css';
 import moment from 'moment';
 import Track from '../src/track.js';
 import uuid from 'react-uuid';
+import {LogoutButton} from '../src/components/LogoutButton.js';
 const { SubMenu } = Menu;
 
 
@@ -33,6 +34,9 @@ export default function AuthenticatedApp() {
                         Shipped Requests</Link>
                   </Menu.Item>
                   </SubMenu>
+                  <Menu.Item key="logout">
+                  <LogoutButton />
+                  </Menu.Item>
               </Menu>
                 <Switch>
                   <Route path="/ship">

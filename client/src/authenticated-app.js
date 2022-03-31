@@ -57,7 +57,7 @@ function Home() {
   <div className="container centered justify-content-center">
       <div className="col-xs-1 col-md-8">
         <div className="row text-center justify-content-center">
-            <h1> Internal Sample Request System </h1>
+            <h1> Vibe Cartons Internal Resources </h1>
         </div>
       </div>
   </div>

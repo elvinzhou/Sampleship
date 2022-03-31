@@ -71,15 +71,18 @@ async function validateAddresses(address) {
       // Success! Print the formatted address
       console.log("Successfully normalized the address!");
       console.log(result);
+      return result;
    }
    else {
      // Bad address. Print the warning & error messages
      console.log("The address is not valid");
      console.log(result);
      console.log(result[0].messages);
+     return result;
    }
   } catch (e) {
     console.log("Error validating address: ", e.message);
+    return e;
   }
 }
 
@@ -94,4 +97,16 @@ async function trackUsingCarrierCodeAndTrackingNumber(carrierCode, trackingNumbe
   }
 }
 
-module.exports = {getRates, createlabel, validateAddresses, trackUsingCarrierCodeAndTrackingNumber}
+async function trackUsingLabelId(labelid) {
+  try {
+    const result = await engine.trackUsingLabelId(labelid);
+
+    console.log("Tracking info:");
+    console.log(result);
+    return result;
+  } catch (e) {
+    console.log("Error tracking shipment: ", e.message);
+  }
+}
+
+module.exports = {getRates, createlabel, validateAddresses, trackUsingCarrierCodeAndTrackingNumber, trackUsingLabelId}

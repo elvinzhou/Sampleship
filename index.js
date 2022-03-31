@@ -6,6 +6,7 @@ const emailfunc = require("./emailfunc");
 const shipping = require("./shipping.js");
 const db = require('better-sqlite3')('./db/samples.db');
 const path=require('path');
+const { v4: uuidv4 } = require('uuid');
 var session = require('express-session')
 require('dotenv').config();
 const port = process.env.PORT || 5000;
@@ -36,8 +37,18 @@ app.use(bodyParser.json())
 app.post('/api/valaddress', function (req,res) {
   shipping.validateAddresses(req.body).then(validatedaddress => {
     res.send(validatedaddress);
+    console.log(validatedaddress);
   })
 })
+
+app.post('/api/statusupdate', function (req,res) {
+  console.log(req.body);
+  const shipmentId = req.body.esi;
+  console.log(shipmentId)
+  var dbupdate = db.prepare('UPDATE samples SET status = 1 where sid = ?').run(shipmentId);
+  res.sendStatus(200);
+})
+
 
 app.post('/api/getrates', async function(req,res) {
   var submitvalues = req.body;
@@ -48,7 +59,7 @@ app.post('/api/getrates', async function(req,res) {
   var height = submitvalues.height;
   var weight = submitvalues.weight;
   var warehouseid = submitvalues.warehouseid;
-  var reqdb = db.prepare('SELECT fname,lname,phone,address from samples WHERE rowid = ?').all(rowid);
+  var reqdb = db.prepare('SELECT fname,lname,phone,address, eshipmentid from samples WHERE rowid = ?').all(rowid);
   console.log(reqdb);
   var firstelement = reqdb[0];
   console.log(firstelement);
@@ -58,6 +69,11 @@ app.post('/api/getrates', async function(req,res) {
     var phone = response.phone;
   } else {
     var phone = "9999999999"
+  }
+  if (response.eshipmentid) {
+    var eshipment = response.eshipmentid;
+  } else {
+    var eshipmentid = uuidv4();
   }
   var jsonaddress=JSON.parse(response.address);
   var al1 = jsonaddress.line1;
@@ -69,8 +85,10 @@ app.post('/api/getrates', async function(req,res) {
   var addfrom = db.prepare('SELECT waddress from locations where warehouseid = ?').all(warehouseid);
   console.log(addfrom);
   var shipfrom = JSON.parse(addfrom[0].waddress);
+  const esi = eshipmentid;
   var shipmentdeets = {
     validateAddress:"validate_and_clean",
+    externalOrderId: esi,
     shipTo:{
       name:name,
       phone:phone,
@@ -99,8 +117,8 @@ app.post('/api/getrates', async function(req,res) {
   }
   shipping.getRates(shipmentdeets).then(data => {
     var rates = data.rateResponse.rates; /*Brings rates in */
-    console.log(data.rateResponse.errors[0]);
-    console.log('rates ' + rates);
+    var sid = data.shipmentId;
+    db.prepare('UPDATE samples SET sid = ? WHERE rowid = ?').run(sid, rowid);
     /*Need to save shipmentID and set statuscode to 1;*/
     res.send(rates);
   });
@@ -111,17 +129,32 @@ app.post('/api/labelreq', function(req,res) {
   shipping.createlabel(req.body.rateId).then(data => {
     var labelId = data.labelId;
     var shipmentId = data.shipmentId;
-    var shipmentCost = data.shipmentCost;
+    var eshipmentid = data.externalOrderId;
+    var shipmentCost = JSON.stringify(data.shipmentCost);
     var tnumber = data.trackingNumber;
     var carrierCode = data.carrierCode;
     var serviceCode = data.serviceCode;
     var label = data.labelDownload.pdf;
-    var package = data.packages;
-    var labeldb = db.prepare('INSERT INTO labels (labelId, shipmentId, shipmentCost, tnumber, carrierCode, serviceCode, label, package) VALUES (?,?,?,?,?,?,?,?)').run(labelId, shipmentId, shipmentCost, tnumber, carrierCode, serviceCode, label, package);
+    var package = JSON.stringify(data.packages);
+    var labeldb = db.prepare('INSERT INTO labels (labelId, shipmentId, shipmentCost, tnumber, carrierCode, serviceCode, label, package, eshipmentid) VALUES (?,?,?,?,?,?,?,?,?)').run(labelId, shipmentId, shipmentCost, tnumber, carrierCode, serviceCode, label, package, eshipmentid);
     res.send(data);
+    shipping.trackUsingLabelId(labelId).then(data => {
+      var tnumber = data.trackingNumber;
+      var status = statusCode;
+      var labeldb = db.prepare('UPDATE labels SET status = ? WHERE tnumber = ?').run(status,tnumber);
+    })
   });
-
 })
+
+app.post('/track', (req, res) => {
+
+  let trackingNumber = req.body.data.tracking_number;
+  let statusCode = req.body.data.status_code;
+
+  var statusupdate = db.prepare('UPDATE labels SET status = ? WHERE tnumber = ?').run(statusCode, trackingNumber);
+  res.sendStatus(200);
+});
+
 
 app.post('/api/samplereqpost', function (req,res) {
   console.log(req.body);
@@ -140,7 +173,8 @@ app.post('/api/samplereqpost', function (req,res) {
   var cemail =req.body.cemail;
   var semail =req.body.semail;
   var status = 0;
-  var sampledb = db.prepare('INSERT INTO samples (fname, lname, samples, date, cemail, semail, al1, al2, al3, city, state, zip, status, address) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run(fname,lname,samples,date,cemail,semail,al1,al2,al3,city,state,zip,status,address);
+  const randuuid = uuidv4();
+  var sampledb = db.prepare('INSERT INTO samples (fname, lname, samples, date, cemail, semail, al1, al2, al3, city, state, zip, status, address, eshipmentid) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run(fname,lname,samples,date,cemail,semail,al1,al2,al3,city,state,zip,status,address,randuuid);
   //not implemented yet
   /* notificationmail(requestJSON,semail); */
   res.send('Request Received. An email will be sent to you with updated tracking info when package is mailed.');
@@ -148,7 +182,15 @@ app.post('/api/samplereqpost', function (req,res) {
 
 app.post('/api/osreq', function (req,res) {
   var statuscode = req.body.statuscode;
-  var reqdb = db.prepare('SELECT rowid,fname,lname,cemail,samples,address from samples WHERE status = ?').all(statuscode);
+  var reqdb = db.prepare('SELECT rowid,fname,lname,cemail,samples,address,eshipmentid,sid from samples WHERE status = ?').all(statuscode);
+  if (statuscode == 1) {
+    for (const i in reqdb) {
+      const esi = reqdb[i].sid;
+      var tnumberdb = db.prepare('SELECT tnumber,status,trackurl FROM labels WHERE shipmentId = ?').get(esi);
+      reqdb[i].tnumber = tnumberdb.tnumber;
+    }
+  }
+  console.log(reqdb);
   res.json(JSON.stringify(reqdb));
 })
 

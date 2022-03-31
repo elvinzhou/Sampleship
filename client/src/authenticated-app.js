@@ -3,30 +3,37 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 import { Form, Input, InputNumber, Checkbox, DatePicker, SubmitButton, Switch as FormikSwitch } from 'formik-antd';
-import { Table, Tag, Space, Modal, Button } from 'antd';
+import { Table, Tag, Space, Modal, Button, Menu, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
+import Track from '../src/track.js';
+import uuid from 'react-uuid';
+const { SubMenu } = Menu;
+
 
 export default function AuthenticatedApp() {
   return (
           <Router>
-            <div>
-                <nav className="navbar navbar-expand-lg">
-                  <ul className="navbar-nav mr-auto">
-                     <li className="nav-item">
+            <Menu mode="horizontal">
+                <Menu.Item key="home">
                         <Link to="/">
                         Home</Link>
-                      </li>
-                     <li className="nav-item">
+                  </Menu.Item>
+                  <SubMenu key="samplesystem" title="Sample Requests">
+                  <Menu.Item key="samplereq">
                        <Link to="/samplereq">
                         New Sample Request</Link>
-                      </li>
-                      <li className="nav-item">
+                  </Menu.Item>
+                  <Menu.Item key="ship">
                         <Link to="/ship">
                         Outstanding Requests</Link>
-                      </li>
-                  </ul>
-                </nav>
+                  </Menu.Item>
+                  <Menu.Item key="trackreq">
+                        <Link to="/trackreq">
+                        Shipped Requests</Link>
+                  </Menu.Item>
+                  </SubMenu>
+              </Menu>
                 <Switch>
                   <Route path="/ship">
                       <Ship />
@@ -34,11 +41,13 @@ export default function AuthenticatedApp() {
                  <Route path="/samplereq">
                       <SampleReq />
                   </Route>
+                  <Route path="/trackreq">
+                      <Track />
+                  </Route>
                  <Route path="/">
                       <Home />
                   </Route>
                 </Switch>
-            </div>
           </Router>
  );
 }
@@ -227,6 +236,8 @@ function Ship() {
       title:'Rate',
       dataIndex:'totalAmount',
       key: 'totalAmount',
+      sorter: (a,b) => a.totalAmount - b.totalAmount,
+      defaultSortOrder:'ascend',
     },
     {
     title: 'Select',
@@ -252,6 +263,16 @@ function Ship() {
           res.json().then(body =>{
             console.log(body);
             const downloadlink = body.labelDownload.pdf;
+            const eshipmentid = body.shipmentId; //Despite the name, this row uses Shipengine ShipmentID instead of externalOrderId, which is not provided in the response.
+            fetch("/api/statusupdate", {
+              method:"POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({esi: eshipmentid})
+            }).then(res => {
+              console.log(res.status);
+            })
             Modal.success({
               content: <a href = {downloadlink}>{downloadlink}</a>,
               title: 'Download label using this link'
@@ -265,12 +286,16 @@ function Ship() {
     <div className="container centered justify-content-center">
         <div className="col-xs-1 col-md-8">
           <div className="row text-center justify-content-center">
-              <h1> Internal Sample Request System </h1>
+          <h1>Outstanding Requests</h1>
               {loading ?
                 (
                   "Loading..."
                 ) : (
+        <Row>
+          <Col span={24}>
           <Table columns={columns} dataSource={state} />
+          </Col>
+        </Row>
         )
       }
       <Modal title="Ship Samples" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}
@@ -299,7 +324,7 @@ function Ship() {
       (
         "Please Input Dimensions for Rates"
       ) : (
-        <Table columns={ratecolumn} dataSource={rates} />
+        <Table columns={ratecolumn} dataSource={rates} scroll = {{y:300}} />
       )
     }
       </Form>
@@ -357,6 +382,7 @@ async function writetoDB(values) {
           } else throw new Error(res.status)
     }).then(function(text) {
       alert(text);
+/* Need to Clear Form here */
     }).catch((error) => {
       console.log(error);
     });
@@ -365,17 +391,19 @@ async function writetoDB(values) {
 
 
 function SampleReq() {
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }, { resetForm }) => {
     const address = values.address;
-    address.countryCode = "US";
-    console.log(address);
+    address.countryCode = 'US';
     await fetch("/api/valaddress", {
       method:"POST",
       headers: {
         'Content-Type':'application/json',
       },
       body:JSON.stringify(address)
-    }).then(res => res.json()).then(result => {
+    }).then(res => {
+        console.log(res);
+        res.json().then(result => {
+        console.log(result);
         if (result[0].status === 'verified') {
           var validatedaddress = result[0].normalizedAddress;
           values.address.line1 = validatedaddress.addressLine1;
@@ -383,14 +411,20 @@ function SampleReq() {
           values.address.city = validatedaddress.cityLocality;
           values.address.state = validatedaddress.stateProvince;
           values.address.zip = validatedaddress.postalCode;
+          console.log(values);
           writetoDB(values);
         } else {
           alert("This address is not valid:", result);
         }
-    });
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  })
     setTimeout(() => {
       setSubmitting(false);
     }, 400);
+    resetForm();
   }
 
 

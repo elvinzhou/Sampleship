@@ -1,13 +1,13 @@
 import React, { createContext, useContext } from "react"
 import useSWR from "swr"
+import { withRouter } from 'react-router-dom';
 
 const AuthContext = createContext();
 
-function AuthProvider (props) {
+export const AuthProvider = ({children}) => {
 
     const { data, error, mutate } = useSWR(`/api/v1/auth/me`)
-
-    const googleLogIn = async googleData => {
+    const handleLogin = async googleData => {
         const res = await fetch("/api/v1/auth/google", {
             method: "POST",
             body: JSON.stringify({
@@ -18,9 +18,9 @@ function AuthProvider (props) {
             }
         })
         const data = await res.json()
+        console.log(data);
         if(data.error) throw new Error(data.error)
         mutate()
-        this.props.history.push('/')
     }
 
     const logOut = async () => {
@@ -34,25 +34,10 @@ function AuthProvider (props) {
         <AuthContext.Provider value={{
             user: data,
             error: error,
-            googleLogIn: googleLogIn,
+            handleLogin: handleLogin,
             logOut: logOut
-        }} {...props}/>
-    )
-}
+        }}> {children} </AuthContext.Provider>
+    );
+};
 
-function useAuthState() {
-  const state = React.useContext(AuthContext)
-  const isPending = state.status === 'pending'
-  const isError = state.status === 'error'
-  const isSuccess = state.status === 'success'
-  const isAuthenticated = state.user && isSuccess
-  return {
-    ...state,
-    isPending,
-    isError,
-    isSuccess,
-    isAuthenticated,
-  }
-}
-
-export {AuthProvider, useAuthState}
+export const useAuthState = () => useContext(AuthContext);

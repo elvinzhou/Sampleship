@@ -5,7 +5,8 @@ import FullPageSpinner from './components/lib.js'
 import AuthenticatedApp from './authenticated-app'
 const Login = React.lazy(() => import('./components/Login/login'))
 function App() {
-  const user = useAuthState();
+  const user = useAuthState().user;
+  console.log(user);
     return (
       <React.Suspense fallback={<FullPageSpinner />}>
         {user ? <AuthenticatedApp /> : <Login />}

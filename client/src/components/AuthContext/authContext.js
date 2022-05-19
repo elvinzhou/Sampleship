@@ -1,11 +1,9 @@
 import React, { createContext, useContext } from "react"
 import useSWR from "swr"
-import { withRouter } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-
     const { data, error, mutate } = useSWR(`/api/v1/auth/me`)
     const handleLogin = async googleData => {
         const res = await fetch("/api/v1/auth/google", {
@@ -20,7 +18,8 @@ export const AuthProvider = ({children}) => {
         const data = await res.json()
         console.log(data);
         if(data.error) throw new Error(data.error)
-        mutate()
+        mutate();
+        this.props.history.push('/');
     }
 
     const logOut = async () => {

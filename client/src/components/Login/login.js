@@ -1,12 +1,14 @@
 import React from 'react';
 import GoogleLogin from 'react-google-login';
-import { useAuthState } from '../AuthContext/authContext.js'
+import { useAuthState } from '../AuthContext/authContext.js';
+import { withRouter } from 'react-router-dom';
+
 
 const ck = require('ckey');
 
 export default function Login(){
 
-const { handleLogin } = useAuthState();
+const { handleLogin } = withRouter(useAuthState());
 console.log("Not Logged In");
 const gcid = ck.REACT_APP_GOOGLE_CLIENT_ID;
 return (

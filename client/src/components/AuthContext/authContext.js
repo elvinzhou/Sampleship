@@ -1,5 +1,7 @@
 import React, { createContext, useContext } from "react"
 import useSWR from "swr"
+import { googleLogout } from '@react-oauth/google';
+
 
 const AuthContext = createContext();
 
@@ -28,6 +30,7 @@ export const AuthProvider = ({children}) => {
         await fetch("/api/v1/auth/logout", {
             method: "DELETE"
         })
+        googleLogout()
         mutate()
     }
 

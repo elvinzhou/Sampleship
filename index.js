@@ -17,12 +17,19 @@ if (checkdb == 0) {
   db.exec('/db/init.sql');
 }
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }
+  cookie: { secure: false}
 }))
+
 
 if (env == 'production'){
 app.use(express.static(path.resolve(__dirname, './client/build')));
@@ -220,7 +227,8 @@ app.post("/api/v1/auth/google", async (req, res) => {
     if (hd === 'vibecartons.com') {
       var userupdate = db.prepare('INSERT INTO users(email,name,picture) VALUES (?,?,?) ON CONFLICT(email) DO UPDATE SET name=excluded.name, picture=excluded.picture').run(email,name,picture);
       var user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
-      req.session.userID = user.id;
+      req.session.userID = user.ID;
+      console.log(req.session.userID);
       res.status(201);
       res.json(user);
       } else {
@@ -229,17 +237,17 @@ app.post("/api/v1/auth/google", async (req, res) => {
 } )
 
 app.use(async (req, res, next) => {
-    var finduser = db.prepare('SELECT * FROM users WHERE id = ?');
-    if (req.session.authorized) {
-      const user = await finduser.get(req.session.userId);
-      req.user = user;
-      next()
-    }
+    var finduser = db.prepare('SELECT * FROM users WHERE ID = ?');
+    console.log("userIDM:" + req.session.userID);
+    const user = await finduser.get(req.session.userID);
+    req.user = user;
+    console.log(req.user);
+    next()
 })
 
 
 app.get("/api/v1/auth/me", async (req, res) => {
-    res.status(200);
+    console.log(req.session);
     res.json(req.user);
 })
 

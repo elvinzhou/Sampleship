@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
+import {Switch, Route, Link} from 'react-router-dom';
 import { Form, Input, InputNumber, Checkbox, DatePicker, SubmitButton, Switch as FormikSwitch } from 'formik-antd';
 import { Table, Tag, Space, Modal, Button, Menu, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
@@ -14,7 +14,7 @@ const { SubMenu } = Menu;
 
 export default function AuthenticatedApp() {
   return (
-          <Router>
+          <>
             <Menu mode="horizontal">
                 <Menu.Item key="home">
                         <Link to="/">
@@ -38,7 +38,7 @@ export default function AuthenticatedApp() {
                   <LogoutButton />
                   </Menu.Item>
               </Menu>
-                <Switch>
+              <Switch>
                   <Route path="/ship">
                       <Ship />
                   </Route>
@@ -51,8 +51,8 @@ export default function AuthenticatedApp() {
                  <Route path="/">
                       <Home />
                   </Route>
-                </Switch>
-          </Router>
+              </Switch>
+              </>
  );
 }
 

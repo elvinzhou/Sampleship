@@ -4,12 +4,15 @@ import useSWR from "swr"
 const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-    const { data, error, mutate } = useSWR(`/api/v1/auth/me`)
+    const fetcher = url => fetch(url,{method: "GET"}).then(r => r.json())
+    const { data, error, mutate } = useSWR(`/api/v1/auth/me`, fetcher)
+    console.log(data)
     const handleLogin = async googleData => {
+        console.log(googleData)
         const res = await fetch("/api/v1/auth/google", {
             method: "POST",
             body: JSON.stringify({
-                token: googleData.tokenId
+                token: googleData.credential
             }),
             headers: {
                 "Content-Type": "application/json"
@@ -19,7 +22,6 @@ export const AuthProvider = ({children}) => {
         console.log(data);
         if(data.error) throw new Error(data.error)
         mutate();
-        this.props.history.push('/');
     }
 
     const logOut = async () => {
@@ -34,7 +36,8 @@ export const AuthProvider = ({children}) => {
             user: data,
             error: error,
             handleLogin: handleLogin,
-            logOut: logOut
+            logOut: logOut,
+            mutate: mutate
         }}> {children} </AuthContext.Provider>
     );
 };

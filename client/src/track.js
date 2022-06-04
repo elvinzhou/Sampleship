@@ -1,11 +1,12 @@
 import { Table, Row, Col } from 'antd';
 import React, { useState, useEffect } from 'react';
+const host = process.env.REACT_APP_HOST;
 
 export default function Track() {
   const [loading, setloading] = useState(true);
   const [trackstate, settrackState] = useState([]);
   const getData = async() => {
-      await fetch("/api/osreq", {
+      await fetch(host + "/api/osreq", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'

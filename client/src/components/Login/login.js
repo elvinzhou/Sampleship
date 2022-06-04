@@ -3,8 +3,7 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useAuthState } from '../AuthContext/authContext.js';
 
-const ck = require('ckey');
-const gcid = ck.REACT_APP_GOOGLE_CLIENT_ID;
+const gcid = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 function useForceUpdate(){
     const [value, setValue] = useState(0); // integer state
@@ -12,7 +11,7 @@ function useForceUpdate(){
 }
 
 export default function Login() {
-const { handleLogin, user, mutate } = useAuthState();
+const { handleLogin, user } = useAuthState();
 const forceUpdate = useForceUpdate();
 
 useEffect(() => {

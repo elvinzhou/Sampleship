@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {Switch, Route, Link} from 'react-router-dom';
-import { Form, Input, InputNumber, Checkbox, DatePicker, SubmitButton, Switch as FormikSwitch } from 'formik-antd';
-import { Table, Tag, Space, Modal, Button, Menu, Row, Col } from 'antd';
+import { Form, Input, DatePicker, SubmitButton } from 'formik-antd';
+import { Table, Space, Modal, Button, Menu, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import Track from '../src/track.js';
-import uuid from 'react-uuid';
 import {LogoutButton} from '../src/components/LogoutButton.js';
 const { SubMenu } = Menu;
-
+const host = process.env.REACT_APP_HOST;
 
 export default function AuthenticatedApp() {
   return (
@@ -99,7 +98,7 @@ function Ship() {
   }, []);
 
   const getshippingrates = async(submitvalues) => {
-    await fetch("/api/getrates", {
+    await fetch(host + "/api/getrates", {
     method: "POST",
     headers: {
       'Content-Type': 'application/json'
@@ -118,7 +117,7 @@ function Ship() {
   })};
 
   const getData = async() => {
-      await fetch("/api/osreq", {
+      await fetch(host + "/api/osreq", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -213,8 +212,8 @@ function Ship() {
     key: 'action',
     render: (text, record) => (
       <Space size="middle">
-        <a href="javascript:" onClick = {showModal.bind(this, record.uid)}>Ship</a>
-        <a href="javascript:" onClick = {() => {intdel.bind(this, record.uid)}}>Mark as Delivered</a>
+        <button onClick = {showModal.bind(this, record.uid)}>Ship</button>
+        <button onClick = {() => {intdel.bind(this, record.uid)}}>Mark as Delivered</button>
       </Space>
     ),
   },
@@ -256,7 +255,7 @@ function Ship() {
   const getLabel = (rid) => {
       setIsModalVisible(false);
       console.log(rid);
-    fetch("/api/labelreq", {
+    fetch(host + "/api/labelreq", {
         method:"POST",
         headers: {
           'Content-Type': 'application/json',
@@ -268,7 +267,7 @@ function Ship() {
             console.log(body);
             const downloadlink = body.labelDownload.pdf;
             const eshipmentid = body.shipmentId; //Despite the name, this row uses Shipengine ShipmentID instead of externalOrderId, which is not provided in the response.
-            fetch("/api/statusupdate", {
+            fetch(host + "/api/statusupdate", {
               method:"POST",
               headers: {
                 'Content-Type': 'application/json',
@@ -345,7 +344,7 @@ function intdel(uid) {
     uid: uid,
     statuscode: 1,
   };
-  fetch("/api/osreq", {
+  fetch(host + "/api/osreq", {
     method: "PATCH",
     headers: {
       'Content-Type': 'application/json',
@@ -364,7 +363,7 @@ function shipstart(fname,lname,cemail,al1,al2,al3,city,state,zip) {
     state_province:state,
     postal_code:zip
   };
-  fetch("api/ship", {
+  fetch(host + "api/ship", {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -374,7 +373,7 @@ function shipstart(fname,lname,cemail,al1,al2,al3,city,state,zip) {
 };
 
 async function writetoDB(values) {
-  await fetch("/api/samplereqpost",{
+  await fetch(host + "/api/samplereqpost",{
     method:"POST",
     headers: {
       'Content-Type': 'application/json',
@@ -398,7 +397,7 @@ function SampleReq() {
   const handleSubmit = async (values, { setSubmitting }, { resetForm }) => {
     const address = values.address;
     address.countryCode = 'US';
-    await fetch("/api/valaddress", {
+    await fetch(host + "/api/valaddress", {
       method:"POST",
       headers: {
         'Content-Type':'application/json',

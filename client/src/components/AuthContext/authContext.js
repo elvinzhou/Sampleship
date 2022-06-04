@@ -4,14 +4,15 @@ import { googleLogout } from '@react-oauth/google';
 
 
 const AuthContext = createContext();
+const host = process.env.REACT_APP_HOST;
 
 export const AuthProvider = ({children}) => {
     const fetcher = url => fetch(url,{method: "GET"}).then(r => r.json())
-    const { data, error, mutate } = useSWR(`/api/v1/auth/me`, fetcher)
+    const { data, error, mutate } = useSWR(host + "/api/v1/auth/me", fetcher)
     console.log(data)
     const handleLogin = async googleData => {
         console.log(googleData)
-        const res = await fetch("/api/v1/auth/google", {
+        const res = await fetch(host + "/api/v1/auth/google", {
             method: "POST",
             body: JSON.stringify({
                 token: googleData.credential
@@ -27,7 +28,7 @@ export const AuthProvider = ({children}) => {
     }
 
     const logOut = async () => {
-        await fetch("/api/v1/auth/logout", {
+        await fetch(host + "/api/v1/auth/logout", {
             method: "DELETE"
         })
         googleLogout()

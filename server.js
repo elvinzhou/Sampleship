@@ -2,6 +2,7 @@ const express = require('express'),
   app = express()
   bodyParser = require('body-parser');
 const fs = require('fs');
+var cors = require('cors');
 const emailfunc = require("./emailfunc");
 const shipping = require("./shipping.js");
 const db = require('better-sqlite3')('./db/samples.db');
@@ -17,17 +18,15 @@ if (checkdb == 0) {
   db.exec('/db/init.sql');
 }
 
+var corsOptions = {
+  origin: /(^|^[^:]+:\/\/|[^\.]+\.)vibecartons\.com$/,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 app.use(function(req, res, next) {
-  if (env == 'development'){
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  } else {
-  res.header("Access-Control-Allow-Origin","*.vibecartons.com");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  }
-  next();
-});
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+})
 
 app.use(session({
   secret: sessionsecret,

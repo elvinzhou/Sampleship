@@ -6,35 +6,37 @@ const emailfunc = require("./emailfunc");
 const shipping = require("./shipping.js");
 const db = require('better-sqlite3')('./db/samples.db');
 const path=require('path');
-const { v4: uuidv4 } = require('uuid');
 var session = require('express-session')
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 var env = process.env.NODE_ENV || 'development';
+var sessionsecret = process.env.secret || 'keyboard cat';
 
 var checkdb = db.exec('SELECT count(*) FROM sqlite_master');
 if (checkdb == 0) {
   db.exec('/db/init.sql');
 }
 
+
 app.use(function(req, res, next) {
+  if (env == 'development'){
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  } else {
+  res.header("Access-Control-Allow-Origin","*.vibecartons.com");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  }
   next();
 });
 
 app.use(session({
-  secret: 'keyboard cat',
+  secret: sessionsecret,
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }
 }))
 
 
-if (env == 'production'){
-app.use(express.static(path.resolve(__dirname, './client/build')));
-//Serve Index page
-}
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 

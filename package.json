@@ -1,8 +1,8 @@
 {
   "name": "sampleship",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "initial project to ship samples",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd client && yarn start",
@@ -13,25 +13,13 @@
   "license": "ISC",
   "proxy": "http://127.0.0.1:5000",
   "dependencies": {
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
     "better-sqlite3": "^7.4.1",
     "body-parser": "^1.19.0",
-    "ckey": "^1.0.3",
-    "cookie-parser": "^1.4.6",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
-    "google-auth-library": "^7.14.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-google-login": "^5.2.2",
-    "react-helmet": "^6.1.0",
-    "react-scripts": "^4.0.3",
-    "react-uuid": "^1.0.2",
-    "shipengine": "^1.0.0",
-    "uuid": "^8.3.2",
-    "yarn": "^1.22.11"
+    "google-auth-library": "^8.0.2",
+    "shipengine": "^1.0.0"
   },
   "repository": {
     "type": "git",
@@ -42,6 +30,7 @@
   },
   "homepage": "https://github.com/elvinzhou/Sampleship#readme",
   "devDependencies": {
-    "concurrently": "^4.1.2"
+    "concurrently": "^4.1.2",
+    "yarn": "^1.22.11"
   }
 }

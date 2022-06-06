@@ -257,6 +257,7 @@ app.use(async (req, res, next) => {
 
 
 app.get("/api/v1/auth/me", async (req, res) => {
+    console.log(req);
     console.log(req.session);
     res.json(req.user);
 })

@@ -2,6 +2,7 @@ const express = require('express'),
   app = express()
   bodyParser = require('body-parser');
 const fs = require('fs');
+var cors = require('cors');
 const emailfunc = require("./emailfunc");
 const shipping = require("./shipping.js");
 const db = require('better-sqlite3')('./db/samples.db');
@@ -18,16 +19,7 @@ if (checkdb == 0) {
 }
 
 
-app.use(function(req, res, next) {
-  if (env == 'development'){
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  } else {
-  res.header("Access-Control-Allow-Origin","*.vibecartons.com");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  }
-  next();
-});
+app.use(cors());
 
 app.use(session({
   secret: sessionsecret,

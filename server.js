@@ -20,6 +20,7 @@ if (checkdb == 0) {
 
 
 var corsOptions = {
+  origin: true,
   credentials: true
 }
 

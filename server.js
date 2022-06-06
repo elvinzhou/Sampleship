@@ -20,7 +20,7 @@ if (checkdb == 0) {
 
 
 var corsOptions = {
-  origin: true,
+  origin: "http://int.vibecartons.com",
   credentials: true
 }
 

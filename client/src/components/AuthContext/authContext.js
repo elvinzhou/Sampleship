@@ -6,7 +6,7 @@ import { googleLogout } from '@react-oauth/google';
 const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-    const fetcher = url => fetch(url,{method: "GET"}).then(r => r.json())
+    const fetcher = url => fetch(url,{method: "GET", credentials:"include"}).then(r => r.json())
     const { data, error, mutate } = useSWR(`/api/v1/auth/me`, fetcher)
     console.log(data)
     const handleLogin = async googleData => {

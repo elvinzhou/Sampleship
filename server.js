@@ -19,7 +19,7 @@ if (checkdb == 0) {
 }
 
 
-app.use(cors());
+app.use(cors())
 
 app.use(session({
   secret: sessionsecret,

@@ -18,17 +18,7 @@ if (checkdb == 0) {
   db.exec('/db/init.sql');
 }
 
-var corsOptions = {
-  origin: /(^|^[^:]+:\/\/|[^\.]+\.)vibecartons\.com$/,
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
 
-<<<<<<< HEAD
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
-  next()
-})
-=======
 var corsOptions = {
   origin: "https://int.vibecartons.com",
   credentials: true
@@ -37,7 +27,6 @@ var corsOptions = {
 app.options('*')
 
 app.use(cors(corsOptions))
->>>>>>> fb9c175f2e722a7adf638d4fc68a3873376cea59
 
 app.use(session({
   secret: sessionsecret,

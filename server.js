@@ -19,6 +19,12 @@ if (checkdb == 0) {
 }
 
 
+var corsOptions = {
+  credentials: true
+}
+
+app.options('*')
+
 app.use(cors())
 
 app.use(session({

@@ -7,7 +7,6 @@ import { Table, Tag, Space, Modal, Button, Menu, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import Track from '../src/track.js';
-import uuid from 'react-uuid';
 import {LogoutButton} from '../src/components/LogoutButton.js';
 const { SubMenu } = Menu;
 

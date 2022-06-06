@@ -38,7 +38,7 @@ app.use(session({
    }
 }))
 
-app.set('trust proxy', 'true')
+app.set('trust proxy', true)
 
 
 // parse application/x-www-form-urlencoded

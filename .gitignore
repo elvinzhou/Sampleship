@@ -37,6 +37,10 @@ client/build/
 node_modules/
 jspm_packages/
 client/node_modules/
+<<<<<<< HEAD
+=======
+
+>>>>>>> fb9c175f2e722a7adf638d4fc68a3873376cea59
 # TypeScript v1 declaration files
 typings/
 

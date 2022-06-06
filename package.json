@@ -1,13 +1,18 @@
 {
   "name": "sampleship",
+<<<<<<< HEAD
   "version": "1.0.1",
+=======
+  "version": "1.0.3",
+>>>>>>> fb9c175f2e722a7adf638d4fc68a3873376cea59
   "description": "initial project to ship samples",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd client && yarn start",
     "server": "nodemon index.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",

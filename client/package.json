@@ -2,6 +2,10 @@
   "name": "client",
   "version": "1.0.0",
   "private": true,
+<<<<<<< HEAD
+=======
+  "proxy": "https://api.vibecartons.com",
+>>>>>>> fb9c175f2e722a7adf638d4fc68a3873376cea59
   "dependencies": {
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.4.0",

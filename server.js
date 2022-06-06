@@ -23,17 +23,33 @@ var corsOptions = {
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
+<<<<<<< HEAD
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   next()
 })
+=======
+var corsOptions = {
+  origin: "https://int.vibecartons.com",
+  credentials: true
+}
+
+app.options('*')
+
+app.use(cors(corsOptions))
+>>>>>>> fb9c175f2e722a7adf638d4fc68a3873376cea59
 
 app.use(session({
   secret: sessionsecret,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: {
+    secure: false,
+    path: "/"
+   }
 }))
+
+app.set('trust proxy', 'true')
 
 
 // parse application/x-www-form-urlencoded
@@ -47,6 +63,10 @@ app.post('/api/valaddress', function (req,res) {
     res.send(validatedaddress);
     console.log(validatedaddress);
   })
+})
+
+app.get('/healthcheck', function(req,res) {
+  res.sendStatus(200);
 })
 
 app.post('/api/statusupdate', function (req,res) {

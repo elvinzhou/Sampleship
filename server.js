@@ -32,8 +32,13 @@ app.use(session({
   secret: sessionsecret,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: {
+    secure: false,
+    path: "/"
+   }
 }))
+
+app.set('trust proxy', 'true')
 
 
 // parse application/x-www-form-urlencoded

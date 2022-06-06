@@ -50,6 +50,10 @@ app.post('/api/valaddress', function (req,res) {
   })
 })
 
+app.get('/healthcheck', function(req,res) {
+  res.sendStatus(200);
+})
+
 app.post('/api/statusupdate', function (req,res) {
   console.log(req.body);
   const shipmentId = req.body.esi;

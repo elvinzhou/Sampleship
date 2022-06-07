@@ -11,7 +11,7 @@ var session = require('express-session')
 require('dotenv').config({path: "./production.env"});
 const port = process.env.PORT || 5000;
 var env = process.env.NODE_ENV || 'development';
-var sessionsecret = process.env.secret || 'keyboard cat';
+var sessionsecret = process.env.secret || 'defaultsecret';
 
 var checkdb = db.exec('SELECT count(*) FROM sqlite_master');
 if (checkdb == 0) {

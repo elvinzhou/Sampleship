@@ -8,7 +8,7 @@ const shipping = require("./shipping.js");
 const db = require('better-sqlite3')('./db/samples.db');
 const path=require('path');
 var session = require('express-session')
-require('dotenv').config({path: './production.env', debug: process.env.DEBUG});
+const dotenv = require('dotenv').config({path: './production.env', debug: process.env.DEBUG});
 const port = process.env.REACT_APP_PORT || 5000;
 var env = process.env.REACT_APP_NODE_ENV || 'development';
 var sessionsecret = process.env.REACT_APP_secret || 'defaultsecret';

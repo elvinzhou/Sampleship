@@ -9,9 +9,9 @@ const db = require('better-sqlite3')('./db/samples.db');
 const path=require('path');
 var session = require('express-session')
 require('dotenv').config({path: './production.env', debug: process.env.DEBUG});
-const port = process.env.PORT || 5000;
-var env = process.env.NODE_ENV || 'development';
-var sessionsecret = process.env.secret || 'defaultsecret';
+const port = process.env.REACT_APP_PORT || 5000;
+var env = process.env.REACT_APP_NODE_ENV || 'development';
+var sessionsecret = process.env.REACT_APP_secret || 'defaultsecret';
 
 var checkdb = db.exec('SELECT count(*) FROM sqlite_master');
 if (checkdb == 0) {
@@ -28,6 +28,8 @@ app.options('*',cors(corsOptions));
 
 app.use(cors(corsOptions));
 console.log(sessionsecret);
+console.log(env);
+console.log(port);
 app.use(session({
   secret: sessionsecret,
   resave: false,

@@ -20,17 +20,16 @@ if (checkdb == 0) {
 
 
 var corsOptions = {
-  origin: "https://int.vibecartons.com",
+  origin: true,
   credentials: true
-}
+};
 
-app.options('*')
+app.options('*',cors(corsOptions));
 
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 
 app.use(session({
   secret: sessionsecret,
-  name: sid,
   resave: false,
   saveUninitialized: true,
   cookie: {

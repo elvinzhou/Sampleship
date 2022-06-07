@@ -7,7 +7,7 @@ const emailfunc = require("./emailfunc");
 const shipping = require("./shipping.js");
 const db = require('better-sqlite3')('./db/samples.db');
 const path=require('path');
-var session = require('express-session')
+const session = require('express-session')
 const dotenv = require('dotenv').config({path: './.env', debug: process.env.DEBUG});
 const port = process.env.REACT_APP_PORT || 5000;
 var env = process.env.REACT_APP_NODE_ENV || 'development';
@@ -18,7 +18,6 @@ if (checkdb == 0) {
   db.exec('/db/init.sql');
 }
 
-
 var corsOptions = {
   origin: true,
   credentials: true
@@ -27,9 +26,7 @@ var corsOptions = {
 app.options('*',cors(corsOptions));
 
 app.use(cors(corsOptions));
-console.log(sessionsecret);
-console.log(env);
-console.log(port);
+
 app.use(session({
   secret: sessionsecret,
   resave: false,

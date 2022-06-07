@@ -27,7 +27,7 @@ var corsOptions = {
 app.options('*',cors(corsOptions));
 
 app.use(cors(corsOptions));
-
+console.log(sessionsecret);
 app.use(session({
   secret: sessionsecret,
   resave: false,

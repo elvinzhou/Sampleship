@@ -30,6 +30,7 @@ app.use(cors(corsOptions))
 
 app.use(session({
   secret: sessionsecret,
+  name: sid,
   resave: false,
   saveUninitialized: true,
   cookie: {

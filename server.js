@@ -8,7 +8,7 @@ const shipping = require("./shipping.js");
 const db = require('better-sqlite3')('./db/samples.db');
 const path=require('path');
 var session = require('express-session')
-require('dotenv').config();
+require('dotenv').config({path: "./production.env"});
 const port = process.env.PORT || 5000;
 var env = process.env.NODE_ENV || 'development';
 var sessionsecret = process.env.secret || 'keyboard cat';

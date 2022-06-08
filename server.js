@@ -30,10 +30,9 @@ app.use(cors(corsOptions));
 app.use(session({
   secret: sessionsecret,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     secure: false,
-    path: "/"
    }
 }))
 

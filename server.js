@@ -37,6 +37,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
+    path: "/",
     domain:'.vibecartons.com',
     secure: true,
     sameSite: 'none',

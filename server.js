@@ -3,6 +3,7 @@ const express = require('express'),
   bodyParser = require('body-parser');
 const fs = require('fs');
 var cors = require('cors');
+const MemoryStore = require('memorystore')(session)
 const emailfunc = require("./emailfunc");
 const shipping = require("./shipping.js");
 const db = require('better-sqlite3')('./db/samples.db');
@@ -28,12 +29,16 @@ app.options('*',cors(corsOptions));
 app.use(cors(corsOptions));
 
 app.use(session({
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
   secret: sessionsecret,
   resave: false,
   saveUninitialized: false,
   cookie: {
     secure: false,
-   }
+    sameSite: none,
+  }
 }))
 
 app.set('trust proxy', true)

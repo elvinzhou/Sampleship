@@ -7,7 +7,7 @@ const AuthContext = createContext();
 const host = process.env.REACT_APP_HOST;
 
 export const AuthProvider = ({children}) => {
-    const fetcher = url => fetch(url,{method: "GET", credentials:"include"}).then(r => r.json())
+    const fetcher = url => fetch(url,{method: "GET", credentials:'include'}).then(r => r.json())
     const { data, error, mutate } = useSWR(host + "/api/v1/auth/me", fetcher)
     console.log(data)
     const handleLogin = async googleData => {

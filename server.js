@@ -21,7 +21,8 @@ if (checkdb == 0) {
 
 var corsOptions = {
   origin: true,
-  credentials: true
+  credentials: true,
+  exposedHeaders: ["set-cookie"],
 };
 
 app.use(cors(corsOptions));

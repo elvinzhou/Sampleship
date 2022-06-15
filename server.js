@@ -28,7 +28,7 @@ app.use(cors(corsOptions));
 
 app.options('*',cors(corsOptions));
 
-
+app.set('trust proxy', true)
 app.use(session({
   store: new MemoryStore({
     checkPeriod: 86400000 // prune expired entries every 24h
@@ -37,13 +37,12 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    domain:'.vibecartons.com',
+    domain:'vibecartons.com',
     secure: true,
     sameSite: 'none',
   }
 }))
 
-app.set('trust proxy', true)
 
 
 // parse application/x-www-form-urlencoded

@@ -42,6 +42,7 @@ app.use(session({
     domain:'.vibecartons.com',
     secure: true,
     maxAge: 86400000,
+    sameSite: 'none'
   }
 }))
 

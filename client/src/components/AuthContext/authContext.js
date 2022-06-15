@@ -17,6 +17,7 @@ export const AuthProvider = ({children}) => {
             body: JSON.stringify({
                 token: googleData.credential
             }),
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json"
             }
@@ -29,7 +30,8 @@ export const AuthProvider = ({children}) => {
 
     const logOut = async () => {
         await fetch(host + "/api/v1/auth/logout", {
-            method: "DELETE"
+            method: "DELETE",
+            credentials: 'include'
         })
         googleLogout()
         mutate()

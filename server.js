@@ -28,7 +28,7 @@ app.use(cors(corsOptions));
 
 app.options('*',cors(corsOptions));
 
-app.set('trust proxy', true)
+app.set('trust proxy', 1)
 app.use(session({
   store: new MemoryStore({
     checkPeriod: 86400000 // prune expired entries every 24h

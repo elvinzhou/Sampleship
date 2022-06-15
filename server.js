@@ -40,6 +40,7 @@ app.use(session({
     path: "/",
     domain:'.vibecartons.com',
     secure: true,
+    maxAge: '86400000'
   }
 }))
 

@@ -61,12 +61,18 @@ function Home() {
       <div className="col-xs-1 col-md-8">
         <div className="row text-center justify-content-center">
             <h1> Vibe Cartons Internal Resources </h1>
+            <div className="col-xs-2">
+            <a href="www.quickbooks.com">Quickbooks</a>
+            <a href="www.mycarriertms.com">MyCarrier</a>
+            <a href="www.expensify.com">Expensify</a>
+            <a href="fleetaccount.ford.com">Ford Pro</a>
+            <a href="www.hubspot.com">Hubspot</a>
+            </div>
         </div>
       </div>
   </div>
 );
 }
-
 function Ship() {
   const [state, setState] = useState([]);
   const [loading, setloading] = useState(true);

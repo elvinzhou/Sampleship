@@ -26,8 +26,6 @@ return (
 <div className="col-xs-1 col-md-8">
    <div className="row text-center justify-content-center">
     <h1>Please Log In</h1>
-
-    </div>
     <GoogleOAuthProvider clientId={gcid}>
     <GoogleLogin
     onSuccess={(response) => {handleLogin(response); forceUpdate()}}
@@ -37,6 +35,7 @@ return (
     useOneTap
     />
     </GoogleOAuthProvider>
+    </div>
     </div>
     </div>
   )

@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {Switch, Route, Link} from 'react-router-dom';
 import { Form, Input, DatePicker, SubmitButton } from 'formik-antd';
-import { Table, Space, Modal, Button, Menu, Row, Col } from 'antd';
+import { Divider, List, Table, Space, Modal, Button, Menu, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import Track from '../src/track.js';
@@ -55,6 +55,14 @@ export default function AuthenticatedApp() {
  );
 }
 
+const linklistdata = [
+  <a href="https://www.quickbooks.com">Quickbooks</a>,
+  <a href="https://www.mycarriertms.com">MyCarrier</a>,
+  <a href="https://www.expensify.com">Expensify</a>,
+  <a href="https://fleetaccount.ford.com">Ford Pro</a>,
+  <a href="https://www.hubspot.com">Hubspot</a>,
+]
+
 function Home() {
   return (
   <div className="container centered justify-content-center">
@@ -62,11 +70,16 @@ function Home() {
         <div className="row text-center justify-content-center">
             <h1> Vibe Cartons Internal Resources </h1>
             <div className="col-xs-2">
-            <a href="www.quickbooks.com">Quickbooks</a>
-            <a href="www.mycarriertms.com">MyCarrier</a>
-            <a href="www.expensify.com">Expensify</a>
-            <a href="fleetaccount.ford.com">Ford Pro</a>
-            <a href="www.hubspot.com">Hubspot</a>
+            <Divider orientation="left"> Quick Links </Divider>
+            <List
+            bordered
+            datasource={linklistdata}
+            renderItem={
+              item => (
+                <List.Item>{item}</List.Item>
+              )
+            }
+            />
             </div>
         </div>
       </div>

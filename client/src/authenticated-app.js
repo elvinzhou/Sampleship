@@ -7,6 +7,7 @@ import { Divider, List, Table, Space, Modal, Button, Menu, Row, Col } from 'antd
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import Track from '../src/track.js';
+import Purchase from '../src/purchase.js';
 import {LogoutButton} from '../src/components/LogoutButton.js';
 const { SubMenu } = Menu;
 const host = process.env.REACT_APP_HOST;
@@ -46,6 +47,9 @@ export default function AuthenticatedApp() {
                   </Route>
                   <Route path="/trackreq">
                       <Track />
+                  </Route>
+                  <Route path="/containerpurchase">
+                      <Purchase />
                   </Route>
                  <Route path="/">
                       <Home />

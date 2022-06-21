@@ -56,12 +56,39 @@ export default function AuthenticatedApp() {
 }
 
 const linklistdata = [
-  '<a href="https://www.quickbooks.com">Quickbooks</a>',
-  '<a href="https://www.mycarriertms.com">MyCarrier</a>',
-  '<a href="https://www.expensify.com">Expensify</a>',
-  '<a href="https://fleetaccount.ford.com">Ford Pro</a>',
-  '<a href="https://www.hubspot.com">Hubspot</a>',
-]
+  {
+    href:'https://www.quickbooks.com',
+    title:'Quickbooks'
+  },
+  {
+    href:'https://www.mycarriertms.com',
+    title:'MyCarrier TMS'
+  },
+  {
+    href:'https://www.expensify.com/authentication/saml/login',
+    title:'Expensify'
+  },
+  {
+    href:'https://www.fleetaccount.ford.com',
+    title:'Ford Pro Vehicle Tracking'
+  },
+  {
+    href:'https://www.hubspot.com',
+    title:'Hubspot'
+  },
+  {
+    href:'https://www.gusto.com',
+    title:'Payroll'
+  },
+  {
+    href:'https://inventory.dearsystems.com',
+    title:'DEAR Inventory'
+  },
+  {
+    href:'https://station.airlocklogistics.com',
+    title:'Airlock Inventory System'
+  }
+];
 
 function Home() {
   return (
@@ -69,14 +96,16 @@ function Home() {
       <div className="col-xs-1 col-md-8">
         <div className="row text-center justify-content-center">
             <h1> Vibe Cartons Internal Resources </h1>
+        </div>
+        <div className="row text-center justify-content-center">
             <div className="col-xs-2">
             <Divider orientation="left"> Quick Links </Divider>
             <List
             bordered
-            datasource={linklistdata}
+            dataSource= {linklistdata}
             renderItem={
               item => (
-                <List.Item>{item}</List.Item>
+                <List.Item><a href={item.href}>{item.title}</a></List.Item>
               )
             }
             />
@@ -122,6 +151,7 @@ function Ship() {
     headers: {
       'Content-Type': 'application/json'
     },
+    credentials:'include',
     body: JSON.stringify(submitvalues),
   }).then(res => res.json()).then(data => {
       console.log(data)
@@ -141,6 +171,7 @@ function Ship() {
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials:'include',
       body: JSON.stringify({statuscode: 0}),
     }).then(
       res => res.json()).then(data => {
@@ -279,6 +310,7 @@ function Ship() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials:'include',
         body: JSON.stringify({rateId: rid})
       }).then(res => {
         if(res.status === 200) {
@@ -291,6 +323,7 @@ function Ship() {
               headers: {
                 'Content-Type': 'application/json',
               },
+              credentials:'include',
               body: JSON.stringify({esi: eshipmentid})
             }).then(res => {
               console.log(res.status);
@@ -368,6 +401,7 @@ function intdel(uid) {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials:'include',
     body: JSON.stringify(patchbody),
   });
 };
@@ -387,6 +421,7 @@ function shipstart(fname,lname,cemail,al1,al2,al3,city,state,zip) {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials:'include',
     body: JSON.stringify(shipbody),
   })
 };
@@ -397,6 +432,7 @@ async function writetoDB(values) {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials:'include',
     body: JSON.stringify(values)
   }).then(res => {
           if(res.status === 200) {
@@ -421,6 +457,7 @@ function SampleReq() {
       headers: {
         'Content-Type':'application/json',
       },
+      credentials:'include',
       body:JSON.stringify(address)
     }).then(res => {
         console.log(res);

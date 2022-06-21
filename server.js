@@ -13,6 +13,17 @@ const dotenv = require('dotenv').config({path: './.env', debug: process.env.DEBU
 const port = process.env.REACT_APP_PORT || 5000;
 var env = process.env.REACT_APP_NODE_ENV || 'development';
 var sessionsecret = process.env.REACT_APP_secret || 'defaultsecret';
+if (env == 'production') {
+  var productionsecure = true
+  var samesitevar = 'none'
+  var domainvar = '.vibecartons.com'
+  var accesscontrolorigin = true
+} else {
+  var productionsecure = false
+  var samesitevar = 'lax'
+  var domainvar = 'localhost'
+  var accesscontrolorigin = true
+};
 
 var checkdb = db.exec('SELECT count(*) FROM sqlite_master');
 if (checkdb == 0) {
@@ -20,7 +31,7 @@ if (checkdb == 0) {
 }
 
 var corsOptions = {
-  origin: true,
+  origin: accesscontrolorigin,
   credentials: true,
 };
 
@@ -29,6 +40,7 @@ app.use(cors(corsOptions));
 app.options('*',cors(corsOptions));
 
 app.set('trust proxy', 1)
+
 app.use(session({
   store: new MemoryStore({
     checkPeriod: 86400000 // prune expired entries every 24h
@@ -37,9 +49,11 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
+    path:'/',
+    domain: domainvar,
+    secure: productionsecure,
     maxAge: 86400000,
-    sameSite: 'none'
+    sameSite: samesitevar
   }
 }))
 

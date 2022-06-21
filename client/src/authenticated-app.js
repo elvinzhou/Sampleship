@@ -56,11 +56,11 @@ export default function AuthenticatedApp() {
 }
 
 const linklistdata = [
-  <a href="https://www.quickbooks.com">Quickbooks</a>,
-  <a href="https://www.mycarriertms.com">MyCarrier</a>,
-  <a href="https://www.expensify.com">Expensify</a>,
-  <a href="https://fleetaccount.ford.com">Ford Pro</a>,
-  <a href="https://www.hubspot.com">Hubspot</a>,
+  '<a href="https://www.quickbooks.com">Quickbooks</a>',
+  '<a href="https://www.mycarriertms.com">MyCarrier</a>',
+  '<a href="https://www.expensify.com">Expensify</a>',
+  '<a href="https://fleetaccount.ford.com">Ford Pro</a>',
+  '<a href="https://www.hubspot.com">Hubspot</a>',
 ]
 
 function Home() {

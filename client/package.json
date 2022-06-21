@@ -26,7 +26,8 @@
     "start": "react-scripts start",
     "build": "npx --yes browserslist@latest --update-db && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "aws": "npm run build && aws s3 sync ./build s3://int-vibecartons --delete"
   },
   "eslintConfig": {
     "extends": [

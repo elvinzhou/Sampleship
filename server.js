@@ -22,7 +22,6 @@ if (checkdb == 0) {
 var corsOptions = {
   origin: true,
   credentials: true,
-  exposedHeaders: ["set-cookie"],
 };
 
 app.use(cors(corsOptions));
@@ -38,9 +37,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    path: "/",
-    domain:'.vibecartons.com',
-    secure: true,
+    secure: false,
     maxAge: 86400000,
     sameSite: 'none'
   }

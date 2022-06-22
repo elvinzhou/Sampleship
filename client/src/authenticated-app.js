@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {Switch, Route, Link} from 'react-router-dom';
 import { Form, Input, DatePicker, SubmitButton } from 'formik-antd';
+import { Formik } from 'formik';
 import { Divider, List, Table, Space, Modal, Button, Menu, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
@@ -505,7 +506,7 @@ function SampleReq() {
             lname: Yup.string()
             .max(20, 'Must be 20 characters or less')
             .required('Required'),
-            cemail: Yup.string().email('Invalid email address').required('Required'),
+            cemail: Yup.string().email('Invalid email address'),
             semail: Yup.string().email('Invalid email address').required('Required'),
           })}
       onSubmit={handleSubmit}
@@ -516,6 +517,9 @@ function SampleReq() {
       </Form.Item>
       <Form.Item name='lname'>
         <Input name="lname" type="text" placeholder="Last Name" />
+      </Form.Item>
+      <Form.Item name='cname'>
+        <Input name="cname" type="text" placeholder="Company Name" />
       </Form.Item>
       <Form.Item name='cemail'>
         <Input name="cemail" type="email" placeholder="Customer Email"/>

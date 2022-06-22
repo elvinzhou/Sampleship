@@ -476,6 +476,7 @@ function SampleReq() {
           values.address.zip = validatedaddress.postalCode;
           console.log(values);
           writetoDB(values);
+          resetForm();
         } else {
           alert("This address is not valid:", result);
         }
@@ -487,7 +488,6 @@ function SampleReq() {
     setTimeout(() => {
       setSubmitting(false);
     }, 400);
-    resetForm();
   }
 
 

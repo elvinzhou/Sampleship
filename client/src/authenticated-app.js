@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {Switch, Route, Link} from 'react-router-dom';
 import { Form, Input, DatePicker, SubmitButton } from 'formik-antd';
-import { Formik } from 'formik';
 import { Divider, List, Table, Space, Modal, Button, Menu, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
@@ -454,7 +453,7 @@ async function writetoDB(values) {
 
 
 function SampleReq() {
-  const handleSubmit = async (values, { setSubmitting }, { resetForm }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const address = values.address;
     address.countryCode = 'US';
     await fetch(host + "/api/valaddress", {

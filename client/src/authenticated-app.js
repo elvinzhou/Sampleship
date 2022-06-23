@@ -73,7 +73,7 @@ const linklistdata = [
     title:'Expensify'
   },
   {
-    href:'https://www.fleetaccount.ford.com',
+    href:'https://fleetaccount.ford.com',
     title:'Ford Pro Vehicle Tracking'
   },
   {

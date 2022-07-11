@@ -33,6 +33,10 @@ export default function AuthenticatedApp() {
                         <Link to="/trackreq">
                         Shipped Requests</Link>
                   </Menu.Item>
+                  <Menu.Item key="purchases">
+                    <Link to="/containerpurchase">
+                    Purchases</Link>
+                  </Menu.Item>
                   </SubMenu>
                   <Menu.Item key="logout">
                   <LogoutButton />
